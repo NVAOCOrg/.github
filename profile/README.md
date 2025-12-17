@@ -1,10 +1,5 @@
 # Nevada Supreme Court Administrative Office of the Courts (AOC)
 
-
-## Repository Overview
-
-This repository hosts various applications and tools. 
-
 ## Support
 
 For technical support or questions:
@@ -18,4 +13,5 @@ For technical support or questions:
 201 South Carson Street  
 Carson City, NV 89701  
 [nvcourts.gov](https://nvcourts.gov)
+
 
