@@ -1,0 +1,46 @@
+on:
+  workflow_call:
+    inputs:
+      appPoolName:
+        required: true
+        type: string
+      deploy_dir:
+        required: true
+        type: string
+      proj_dir:
+        required: true
+        type: string
+      runner:
+        required: true
+        type: string
+        default: '["self-hosted"]'
+jobs:
+  deploy_site:
+    runs-on: ${{ fromJSON(inputs.runner) }}
+    defaults:
+      run:
+        working-directory: ${{inputs.proj_dir}}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Restore Dependencies
+        run: dotnet restore
+  
+      - name: Build Application
+        run: dotnet build --configuration Release --no-restore
+  
+      - name: Stop IIS
+        shell: powershell
+        continue-on-error: true
+        run: |
+          Stop-WebAppPool -Name "${{inputs.appPoolName}}"
+  
+      - name: Publish Application
+        run: dotnet publish -c Release -o "${{inputs.deploy_dir}}"
+  
+      - name: Start IIS
+        shell: powershell
+        continue-on-error: true
+        run: |
+          Start-WebAppPool -Name "${{inputs.appPoolName}}"
